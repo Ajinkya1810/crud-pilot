@@ -1,0 +1,9 @@
+{
+  "element_name": "movie",
+  "configuration": {
+    "name": "VARCHAR(255)",
+    "age": "INT",
+    "nationality": "VARCHAR(255)",
+    "address": "VARCHAR(255)"
+  }
+}
