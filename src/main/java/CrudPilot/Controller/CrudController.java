@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -26,7 +27,9 @@ public class CrudController {
         if (crudExecutor.createTable(request)) {
             return new ResponseEntity<>(request, HttpStatus.ACCEPTED);
         } else {
-            return new ResponseEntity<>(request, HttpStatus.BAD_REQUEST);
+            Map<String, Object> response = new HashMap<>();
+            response.put(HttpStatus.BAD_REQUEST.toString(), "Exception occurred while Creating table");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
     }
