@@ -39,3 +39,5 @@
   * Stop the Java Process:
     * Once you have identified the PID of the Java process you want to stop, use the following command to stop it.
       * Stop-Process -Id <PID>
+  * For Force to Stop
+    * Get-Process -Name "java" | Stop-Process -Force
