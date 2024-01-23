@@ -1,0 +1,3 @@
+curl --location --request POST 'http://localhost:8080/bulk-upload' \
+--header 'Content-Type: application/json' \
+--form 'file=@"/C:/Users/91922/Desktop/Test-CRUD-pilot.xlsx"'

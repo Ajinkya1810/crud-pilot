@@ -1,0 +1,11 @@
+curl --location --request POST 'http://localhost:8080/createTable' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "element_name": "student",
+    "configuration": {
+        "name": "VARCHAR(255)",
+        "age": "INT",
+        "nationality": "VARCHAR(255)",
+        "address": "VARCHAR(255)"
+    }
+}'
