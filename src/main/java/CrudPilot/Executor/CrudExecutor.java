@@ -58,4 +58,44 @@ public class CrudExecutor {
         values = values + " )";
         return "";
     }
+    
+	public boolean insertData(Map<String, Object> request) {
+		try {
+		String insertDataSqlQuery = "Insert into " + request.get(DataModelConstants.ELEMENT_NAME) + " ( "
+				+ formDataQueryFromConfiguration(request.get(DataModelConstants.CONFIGURATION));
+
+		jdbcTemplate.execute(insertDataSqlQuery);
+		logger.info("Query generated for the InsertTable : {}", insertDataSqlQuery);
+		return true;
+		} catch(Exception e) {
+			logger.info("exception while Insert data into table : {}", e);
+			return false;
+			
+		}
+	}
+
+	public String formDataQueryFromConfiguration(Object configuration) {
+		LinkedHashMap<Object, Object> linkedHashMap = (LinkedHashMap<Object, Object>) configuration;
+		Set<Object> keys = linkedHashMap.keySet();
+		String columns = "";
+		String values = "";
+		for (Object key : keys) {
+			columns = columns + key.toString() + ", ";
+			values = values + "'" + linkedHashMap.get(key).toString() + "', ";
+		}
+		columns = columns.substring(0, columns.length() - 2);
+		columns = columns + " ) VALUES ( ";
+		values = values.substring(0, values.length() - 2);
+		values = values + " )";
+		return columns + values;
+	}
+
+	public List<Map<String, Object>> showData(Map<String, Object> request) {
+		
+			String sql = "SELECT * FROM "+ request.get(DataModelConstants.ELEMENT_NAME);
+			return jdbcTemplate.queryForList(sql);	
+	}
+	
+	  
+    
 }
