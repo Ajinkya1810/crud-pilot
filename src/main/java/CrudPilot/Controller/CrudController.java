@@ -1,5 +1,7 @@
 package CrudPilot.Controller;
 
+import CrudPilot.Commons.TransactionLogger;
+import CrudPilot.Constants.EndpointReferrerConstants;
 import CrudPilot.Executor.CrudExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,10 +29,14 @@ public class CrudController {
     @Autowired
     CrudExecutor crudExecutor;
 
+    @Autowired
+    TransactionLogger txnLogger;
+
     @PostMapping("/createTable")
-    public ResponseEntity<Map<String, Object>> save(@RequestBody Map<String, Object> request) {
+    public ResponseEntity<Map<String, Object>> createTable(@RequestBody Map<String, Object> request) {
         logger.info("Create Table called. Request received : {}", request);
         if (crudExecutor.createTable(request)) {
+            txnLogger.logTransaction(request);
             return new ResponseEntity<>(request, HttpStatus.ACCEPTED);
         } else {
             Map<String, Object> response = new HashMap<>();
@@ -52,7 +58,7 @@ public class CrudController {
 
 	}
 
-	@PostMapping("/showData")
+	@PostMapping(EndpointReferrerConstants.SHOW_TABLE_API)
 	public ResponseEntity<List<Map<String, Object>>> ShowData(@RequestBody Map<String, Object> request) {
 		logger.info("Show Table called. Request received : {}", request);
 
@@ -62,14 +68,16 @@ public class CrudController {
 	@PostMapping("/upload")
     public String handleFileUpload(@RequestParam("data") String data) {
         try {
-           
+
+//            @TODO: specifiy this is application.propertise
             String filePath = "D:\\github repo neyo\\crud-pilot\\data\\file.txt";
 
             writeStringToFile(data, filePath);            
             //write a 
             return "redirect || success";
         } catch (IOException e) {
-            
+
+//            @TODO: use logger
             e.printStackTrace();
             return "redirect || error";
         }

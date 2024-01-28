@@ -37,7 +37,7 @@ public class BulkUploadController {
             response.put(HttpStatus.OK.toString(), "Bulk Upload Successful");
             return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
         } else {
-            response.put(HttpStatus.BAD_REQUEST.toString(), "Exception occurred while Creating table");
+            response.put(HttpStatus.BAD_REQUEST.toString(), "Exception occurred in Bulk-Upload");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
     }

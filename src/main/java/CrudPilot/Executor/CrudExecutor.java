@@ -91,7 +91,7 @@ public class CrudExecutor {
 	}
 
 	public List<Map<String, Object>> showData(Map<String, Object> request) {
-		
+//		TODO: handle exceptions
 			String sql = "SELECT * FROM "+ request.get(DataModelConstants.ELEMENT_NAME);
 			return jdbcTemplate.queryForList(sql);	
 	}

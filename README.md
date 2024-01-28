@@ -6,16 +6,18 @@
 * JPA - completed
 * Deployment local - completed
 * H2 In Memory Db - completed 
+* Bulk upload - completed
 * Gateway / Authentication
 * Gateway / Routing
 * Caching
 * Async / rest-api's which will not wait for the response but makes entry in the Db with AckID and 
   will wait for the given SLA timeout to receive response from requested source 
-* Hibernate
+* Hibernate - completed
 * AOP - Implement Aspect 
-* SMS service
-* Email service
+* SMS service - completed
+* Email service - completed
 * Swagger API Specification - will be used as input
+* Transaction logging - completed
 
 ## The following was discovered as part of building this project:
 
