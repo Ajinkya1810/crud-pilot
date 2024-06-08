@@ -6,6 +6,7 @@ import CrudPilot.Executor.CrudExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +21,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 @RestController
 public class CrudController {
@@ -32,18 +34,22 @@ public class CrudController {
     @Autowired
     TransactionLogger txnLogger;
 
-    @PostMapping("/createTable")
-    public ResponseEntity<Map<String, Object>> createTable(@RequestBody Map<String, Object> request) {
-        logger.info("Create Table called. Request received : {}", request);
-        if (crudExecutor.createTable(request)) {
-            txnLogger.logTransaction(request);
-            return new ResponseEntity<>(request, HttpStatus.ACCEPTED);
-        } else {
-            Map<String, Object> response = new HashMap<>();
-            response.put(HttpStatus.BAD_REQUEST.toString(), "Exception occurred while Creating table");
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }
+    @Value("${upload.file.path}")
+    String filePath;
 
+    @PostMapping("/createTable")
+    public Callable<ResponseEntity<Map<String, Object>>> createTable(@RequestBody Map<String, Object> request) {
+        return () -> {
+            logger.info("Create Table called. Request received : {}", request);
+            if (crudExecutor.createTable(request)) {
+                txnLogger.logTransaction(request);
+                return new ResponseEntity<>(request, HttpStatus.OK);
+            } else {
+                Map<String, Object> response = new HashMap<>();
+                response.put(HttpStatus.BAD_REQUEST.toString(), "Exception occurred while Creating table");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
+        };
     }
     
 	@PostMapping("/insertData")
@@ -51,7 +57,7 @@ public class CrudController {
 		logger.info("Insert Table called. Request received : {}", request);
 
 		if (crudExecutor.insertData(request)) {
-			return new ResponseEntity<>(request, HttpStatus.ACCEPTED);
+			return new ResponseEntity<>(request, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(request, HttpStatus.BAD_REQUEST);
 		}
@@ -62,24 +68,17 @@ public class CrudController {
 	public ResponseEntity<List<Map<String, Object>>> ShowData(@RequestBody Map<String, Object> request) {
 		logger.info("Show Table called. Request received : {}", request);
 
-		return new ResponseEntity<>(crudExecutor.showData(request), HttpStatus.ACCEPTED);
+		return new ResponseEntity<>(crudExecutor.showData(request), HttpStatus.OK);
 	}
 	
 	@PostMapping("/upload")
-    public String handleFileUpload(@RequestParam("data") String data) {
+    public ResponseEntity<String> handleFileUpload(@RequestParam("data") String data) {
         try {
-
-//            @TODO: specifiy this is application.propertise
-            String filePath = "D:\\github repo neyo\\crud-pilot\\data\\file.txt";
-
             writeStringToFile(data, filePath);            
-            //write a 
-            return "redirect || success";
+            return new ResponseEntity<>("Sucess", HttpStatus.OK);
         } catch (IOException e) {
-
-//            @TODO: use logger
-            e.printStackTrace();
-            return "redirect || error";
+            logger.error("Exception occurred in uploadFile probable cause", e);
+            return new ResponseEntity<>("Error", HttpStatus.EXPECTATION_FAILED);
         }
     }
 	

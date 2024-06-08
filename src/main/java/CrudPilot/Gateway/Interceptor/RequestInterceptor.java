@@ -13,8 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class RequestInterceptor implements HandlerInterceptor {
 
+    private static final int TIMEOUT = 2000; // Timeout in milliseconds (5 seconds)
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+//        request.setAttribute("org.apache.catalina.ASYNC_TIMEOUT", TIMEOUT);
         return true;
     }
 }
